@@ -18,7 +18,8 @@ namespace Clock
     {
         ColorDialog backgroundColorDialog;
         ColorDialog foregroundColorDialog;
-        ChooseFont chooseFontDialog
+        ChooseFont chooseFontDialog;
+        string FontFile {get; set;}
 
         public MainForm()
         {
@@ -27,9 +28,9 @@ namespace Clock
             this.TransparencyKey = Color.Empty;
             backgroundColorDialog = new ColorDialog();
             foregroundColorDialog = new ColorDialog();
-            LoadSettings();
 
             chooseFontDialog = new ChooseFont();
+            LoadSettings();
 
             labelTime.ForeColor = foregroundColorDialog.Color;
             SetVisibility(false);
@@ -145,6 +146,11 @@ namespace Clock
                 settings.Add(sr.ReadLine());
             backgroundColorDialog.Color = Color.FromArgb(Convert.ToInt32(settings.ToArray()[0]));
             foregroundColorDialog.Color = Color.FromArgb(Convert.ToInt32(settings.ToArray()[1]));
+            FontFile = settings.ToArray()[2];
+            topmostToolStripMenuItem.Checked = bool.Parse(settings.ToArray()[3]);
+            showDateToolStripMenuItem.Checked = bool.Parse(settings.ToArray()[4]);
+            labelTime.Font = chooseFontDialog.SetFontFile(FontFile);
+            chooseFontDialog.SetFontFile(FontFile);
             sr.Close();
         }
 
@@ -153,7 +159,9 @@ namespace Clock
             StreamWriter sw = new StreamWriter("settings.txt");
             sw.WriteLine(backgroundColorDialog.Color.ToArgb());
             sw.WriteLine(foregroundColorDialog.Color.ToArgb());
-            sw.Write(labelTime.Font.Name);
+            sw.WriteLine(chooseFontDialog.FontFile.Split('\\').Last());
+            sw.WriteLine(topmostToolStripMenuItem.Checked);
+            sw.WriteLine(showDateToolStripMenuItem.Checked);
             sw.Close();
             Process.Start("notepad", "settings.txt");
         }

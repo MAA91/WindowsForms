@@ -1,3 +1,5 @@
--12582848
--16744384
-Microsoft Sans Serif
+-16744193
+-65408
+Sophiecomic-Regular.ttf
+True
+False
