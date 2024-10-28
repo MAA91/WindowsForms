@@ -7,6 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using System.Reflection;
+using System.Diagnostics;
+using Clock.Properties;
 
 namespace Clock
 {
@@ -14,20 +18,33 @@ namespace Clock
     {
         ColorDialog backgroundColorDialog;
         ColorDialog foregroundColorDialog;
+        ChooseFont chooseFontDialog
 
         public MainForm()
         {
             InitializeComponent();
+            SetFontDirectory();
             this.TransparencyKey = Color.Empty;
             backgroundColorDialog = new ColorDialog();
             foregroundColorDialog = new ColorDialog();
+            LoadSettings();
+
+            chooseFontDialog = new ChooseFont();
+
+            labelTime.ForeColor = foregroundColorDialog.Color;
             SetVisibility(false);
             this.Location = new Point
                 (
-                    System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - this.Width - 30,
+                    System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - this.Width,
                     50
                 );
-            //this.Text += $" Location: ({this.Location.X}, {this.Location.Y})";
+        }
+
+        void SetFontDirectory()
+        {
+            string location = Assembly.GetEntryAssembly().Location;
+            string path = Path.GetDirectoryName(location);         
+            Directory.SetCurrentDirectory($"{path}\\..\\..\\Fonts");
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -44,12 +61,11 @@ namespace Clock
             this.ShowInTaskbar = visible;
             this.btnHideControls.Visible = visible;
             checkBoxShowDate.Visible = visible;
-            labelTime.BackColor = visible ? Color.Empty : Color.Coral;
+            labelTime.BackColor = visible ? Color.Empty : backgroundColorDialog.Color;
         }
 
         private void btnHideControls_Click(object sender, EventArgs e)
         {
-            //SetVisibility(false);
             showControlsToolStripMenuItem.Checked = false;
             notifyIconSystemTray.ShowBalloonTip
             (
@@ -113,6 +129,38 @@ namespace Clock
         {
             if (backgroundColorDialog.ShowDialog(this) == DialogResult.OK)
                 labelTime.BackColor = backgroundColorDialog.Color;
+        }
+
+        private void fontsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (chooseFontDialog.ShowDialog(this) == DialogResult.OK)
+                labelTime.Font = chooseFontDialog.ChoosenFont;
+        }
+
+        void LoadSettings()
+        {
+            StreamReader sr = new StreamReader("settings.txt");
+            List<string> settings = new List<string>();
+            while (!sr.EndOfStream)
+                settings.Add(sr.ReadLine());
+            backgroundColorDialog.Color = Color.FromArgb(Convert.ToInt32(settings.ToArray()[0]));
+            foregroundColorDialog.Color = Color.FromArgb(Convert.ToInt32(settings.ToArray()[1]));
+            sr.Close();
+        }
+
+        void SaveSettings()
+        {
+            StreamWriter sw = new StreamWriter("settings.txt");
+            sw.WriteLine(backgroundColorDialog.Color.ToArgb());
+            sw.WriteLine(foregroundColorDialog.Color.ToArgb());
+            sw.Write(labelTime.Font.Name);
+            sw.Close();
+            Process.Start("notepad", "settings.txt");
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveSettings();
         }
     }
 }
