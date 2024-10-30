@@ -1,5 +1,5 @@
 -16744193
 -65408
-Sophiecomic-Regular.ttf
+ChopinScript.ttf
 True
 False

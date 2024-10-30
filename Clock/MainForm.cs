@@ -11,6 +11,7 @@ using System.IO;
 using System.Reflection;
 using System.Diagnostics;
 using Clock.Properties;
+using Microsoft.Win32;
 
 namespace Clock
 {
@@ -152,6 +153,11 @@ namespace Clock
             labelTime.Font = chooseFontDialog.SetFontFile(FontFile);
             chooseFontDialog.SetFontFile(FontFile);
             sr.Close();
+
+            RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            object run = rk.GetValue("Clock");
+            if (run != null) loadOnWindowsStartupToolStripMenuItem.Checked = true;
+            rk.Dispose();
         }
 
         void SaveSettings()
@@ -169,6 +175,16 @@ namespace Clock
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveSettings();
+        }
+
+        private void loadOnWindowsStartupToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            if (loadOnWindowsStartupToolStripMenuItem.Checked)
+                rk.SetValue("Clock", Application.ExecutablePath);
+            else
+                rk.DeleteValue("Clock", false);
+            rk.Dispose();
         }
     }
 }
