@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Diagnostics;
 using Clock.Properties;
 using Microsoft.Win32;
+using System.Runtime.InteropServices;
 
 namespace Clock
 {
@@ -20,15 +21,18 @@ namespace Clock
         ColorDialog backgroundColorDialog;
         ColorDialog foregroundColorDialog;
         ChooseFont chooseFontDialog;
+        AlarmList alarmList;
         string FontFile {get; set;}
 
         public MainForm()
         {
             InitializeComponent();
+            AllocConsole();
             SetFontDirectory();
             this.TransparencyKey = Color.Empty;
             backgroundColorDialog = new ColorDialog();
             foregroundColorDialog = new ColorDialog();
+            alarmList = new AlarmList();
 
             chooseFontDialog = new ChooseFont();
             LoadSettings();
@@ -169,7 +173,7 @@ namespace Clock
             sw.WriteLine(topmostToolStripMenuItem.Checked);
             sw.WriteLine(showDateToolStripMenuItem.Checked);
             sw.Close();
-            Process.Start("notepad", "settings.txt");
+            //Process.Start("notepad", "settings.txt");
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -186,5 +190,13 @@ namespace Clock
                 rk.DeleteValue("Clock", false);
             rk.Dispose();
         }
+
+        private void alarmsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            alarmList.ShowDialog(this);
+        }
+
+        [DllImport("kernel32.dll")]
+        static extern bool AllocConsole();
     }
 }
