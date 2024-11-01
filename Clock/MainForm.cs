@@ -22,6 +22,7 @@ namespace Clock
         ColorDialog foregroundColorDialog;
         ChooseFont chooseFontDialog;
         AlarmList alarmList;
+        Alarm alarm;
         string FontFile {get; set;}
 
         public MainForm()
@@ -44,6 +45,9 @@ namespace Clock
                     System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - this.Width,
                     50
                 );
+
+            alarm = new Alarm();
+            GetNextAlarm();
         }
 
         void SetFontDirectory()
@@ -53,11 +57,26 @@ namespace Clock
             Directory.SetCurrentDirectory($"{path}\\..\\..\\Fonts");
         }
 
+        void GetNextAlarm()
+        {
+            List<Alarm> alarms = new List<Alarm>();
+            foreach (Alarm alarm in alarmList.ListBoxAlarms.Items)
+                alarms.Add(alarm);
+            if(alarms.Min() != null)alarm = alarms.Min();
+            Console.WriteLine(alarm);
+        }
         private void timer_Tick(object sender, EventArgs e)
         {
             labelTime.Text = DateTime.Now.ToString("HH.mm.ss");
             if (checkBoxShowDate.Checked)
                 labelTime.Text += $"\n{DateTime.Today.ToString("yyyy.MM.dd")}";
+            GetNextAlarm();
+            if (
+                 DateTime.Now.Hour == alarm.Time.Hour &&
+                 DateTime.Now.Minute == alarm.Time.Minute &&
+                 DateTime.Now.Second == alarm.Time.Second
+                 )
+                MessageBox.Show(alarm.Filename, "Alarm", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         
         private void SetVisibility(bool visible)

@@ -32,7 +32,7 @@ namespace Clock
         {
             if(Alarm.Date != DateTime.MinValue)this.dateTimePickerDate.Value = Alarm.Date;
             this.dateTimePickerTime.Value = Alarm.Time;
-            this.labelFilename.Text = Alarm.Fileneme;
+            this.labelFilename.Text = Alarm.Filename;
             for (int i = 0; i < Alarm.Weekdays.Length; i++)
                 checkedListBoxWeek.SetItemChecked(i, Alarm.Weekdays[i]);
         }
@@ -41,7 +41,7 @@ namespace Clock
         {
             Alarm.Date = dateTimePickerDate.Enabled ? dateTimePickerDate.Value : DateTime.MinValue;
             Alarm.Time = dateTimePickerTime.Value;
-            Alarm.Fileneme = labelFilename.Text;
+            Alarm.Filename = labelFilename.Text;
             for (int i = 0; i < Alarm.Weekdays.Length; i++) Alarm.Weekdays[i] = false;
             for (int i = 0; i < checkedListBoxWeek.CheckedIndices.Count; i++)
             {
@@ -71,7 +71,7 @@ namespace Clock
         {
             if(openFileDialogSound.ShowDialog() == DialogResult.OK)
             {
-               Alarm.Fileneme =  labelFilename.Text = openFileDialogSound.FileName;
+               Alarm.Filename =  labelFilename.Text = openFileDialogSound.FileName;
             }
         }
     }
