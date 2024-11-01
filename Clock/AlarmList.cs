@@ -24,7 +24,7 @@ namespace Clock
         }
 
         private void buttonAddAlarm_Click(object sender, EventArgs e)
-        {           AddAlarm addAlarm = new AddAlarm();
+        {   AddAlarm addAlarm = new AddAlarm();
             if(addAlarm.ShowDialog(this) == DialogResult.OK)
             {
                 listBoxAlarms.Items.Add(addAlarm.Alarm);

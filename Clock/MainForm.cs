@@ -57,28 +57,57 @@ namespace Clock
             Directory.SetCurrentDirectory($"{path}\\..\\..\\Fonts");
         }
 
-        void GetNextAlarm()
+        public void GetNextAlarm()
         {
             List<Alarm> alarms = new List<Alarm>();
-            foreach (Alarm alarm in alarmList.ListBoxAlarms.Items)
-                alarms.Add(alarm);
+            foreach (Alarm item in alarmList.ListBoxAlarms.Items)
+            {
+                if(item.Time > DateTime.Now)alarms.Add(item); 
+            }
             if(alarms.Min() != null)alarm = alarms.Min();
+            //List<TimeSpan> intervals = new List<TimeSpan>();
+            //foreach (Alarm item in alarmList.ListBoxAlarms.Items)
+            //{
+            //    TimeSpan min = new TimeSpan(24, 0, 0);
+            //    if (DateTime.Now - item.Time < min)
+            //        alarm = item;
+            //}
             Console.WriteLine(alarm);
         }
+
         private void timer_Tick(object sender, EventArgs e)
         {
             labelTime.Text = DateTime.Now.ToString("HH.mm.ss");
             if (checkBoxShowDate.Checked)
                 labelTime.Text += $"\n{DateTime.Today.ToString("yyyy.MM.dd")}";
-            GetNextAlarm();
+            if (showWeekdayToolStripMenuItem.Checked)
+                labelTime.Text += $"\n{DateTime.Now.DayOfWeek}";
             if (
+                 alarm.Weekdays[((int)DateTime.Now.DayOfWeek - 1 < 0 ? 6 : (int)DateTime.Now.DayOfWeek - 1)] == true &&                 
                  DateTime.Now.Hour == alarm.Time.Hour &&
                  DateTime.Now.Minute == alarm.Time.Minute &&
                  DateTime.Now.Second == alarm.Time.Second
-                 )
-                MessageBox.Show(alarm.Filename, "Alarm", MessageBoxButtons.OK, MessageBoxIcon.Information);
+               )
+            {
+                PlayAlarm();
+                //MessageBox.Show(alarm.Filename, "Alarm", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                GetNextAlarm();
+            }
+            if(DateTime.Now.Second == 0)
+            {
+                Console.WriteLine("Minute");
+                GetNextAlarm();
+            }
         }
         
+        void PlayAlarm()
+        {
+            axWindowsMediaPlayer.URL = alarm.Filename;
+            axWindowsMediaPlayer.settings.volume = 100;
+            axWindowsMediaPlayer.Ctlcontrols.play();
+            axWindowsMediaPlayer.Visible = true;
+        }
+
         private void SetVisibility(bool visible)
         {
             this.TransparencyKey = visible ? Color.Empty : this.BackColor;
@@ -87,6 +116,7 @@ namespace Clock
             this.btnHideControls.Visible = visible;
             checkBoxShowDate.Visible = visible;
             labelTime.BackColor = visible ? Color.Empty : backgroundColorDialog.Color;
+            this.axWindowsMediaPlayer.Visible = false;
         }
 
         private void btnHideControls_Click(object sender, EventArgs e)
@@ -213,6 +243,7 @@ namespace Clock
         private void alarmsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             alarmList.ShowDialog(this);
+            GetNextAlarm();
         }
 
         [DllImport("kernel32.dll")]

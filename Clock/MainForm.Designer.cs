@@ -47,12 +47,15 @@
             this.loadOnWindowsStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showWeekdayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.checkBoxShowDate = new System.Windows.Forms.CheckBox();
             this.btnHideControls = new System.Windows.Forms.Button();
             this.notifyIconSystemTray = new System.Windows.Forms.NotifyIcon(this.components);
             this.fontDialog = new System.Windows.Forms.FontDialog();
+            this.axWindowsMediaPlayer = new AxWMPLib.AxWindowsMediaPlayer();
             this.contextMenuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer)).BeginInit();
             this.SuspendLayout();
             // 
             // labelTime
@@ -74,6 +77,7 @@
             this.showControlsToolStripMenuItem,
             this.toolStripSeparator1,
             this.showDateToolStripMenuItem,
+            this.showWeekdayToolStripMenuItem,
             this.toolStripSeparator2,
             this.colorsToolStripMenuItem,
             this.fontsToolStripMenuItem,
@@ -84,7 +88,7 @@
             this.toolStripSeparator4,
             this.closeToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(210, 210);
+            this.contextMenuStrip.Size = new System.Drawing.Size(210, 232);
             // 
             // topmostToolStripMenuItem
             // 
@@ -187,6 +191,13 @@
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
+            // showWeekdayToolStripMenuItem
+            // 
+            this.showWeekdayToolStripMenuItem.CheckOnClick = true;
+            this.showWeekdayToolStripMenuItem.Name = "showWeekdayToolStripMenuItem";
+            this.showWeekdayToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.showWeekdayToolStripMenuItem.Text = "Show Weekday";
+            // 
             // timer
             // 
             this.timer.Enabled = true;
@@ -208,7 +219,7 @@
             // btnHideControls
             // 
             this.btnHideControls.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnHideControls.Location = new System.Drawing.Point(12, 291);
+            this.btnHideControls.Location = new System.Drawing.Point(12, 255);
             this.btnHideControls.Name = "btnHideControls";
             this.btnHideControls.Size = new System.Drawing.Size(275, 86);
             this.btnHideControls.TabIndex = 2;
@@ -225,11 +236,21 @@
             this.notifyIconSystemTray.DoubleClick += new System.EventHandler(this.notifyIconSystemTray_DoubleClick);
             this.notifyIconSystemTray.MouseMove += new System.Windows.Forms.MouseEventHandler(this.notifyIconSystemTray_MouseMove);
             // 
+            // axWindowsMediaPlayer1
+            // 
+            this.axWindowsMediaPlayer.Enabled = true;
+            this.axWindowsMediaPlayer.Location = new System.Drawing.Point(12, 347);
+            this.axWindowsMediaPlayer.Name = "axWindowsMediaPlayer1";
+            this.axWindowsMediaPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
+            this.axWindowsMediaPlayer.Size = new System.Drawing.Size(275, 48);
+            this.axWindowsMediaPlayer.TabIndex = 3;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(353, 407);
+            this.Controls.Add(this.axWindowsMediaPlayer);
             this.Controls.Add(this.btnHideControls);
             this.Controls.Add(this.checkBoxShowDate);
             this.Controls.Add(this.labelTime);
@@ -241,6 +262,7 @@
             this.TransparencyKey = System.Drawing.Color.White;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.contextMenuStrip.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -270,6 +292,8 @@
         private System.Windows.Forms.FontDialog fontDialog;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem alarmsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showWeekdayToolStripMenuItem;
+        private AxWMPLib.AxWindowsMediaPlayer axWindowsMediaPlayer;
     }
 }
 
