@@ -24,6 +24,7 @@ namespace Clock
         ChooseFont chooseFontDialog;
         AlarmList alarmList;
         Alarm alarm;
+        static string DEFAULT_ALARM_SOUND = "..Sound\\melodiya-na-budilnik-quotkurantyiquot-33073";
         string FontFile {get; set;}
 
         public MainForm()
@@ -66,13 +67,6 @@ namespace Clock
                 if(item.Time > DateTime.Now)alarms.Add(item); 
             }
             if(alarms.Min() != null)alarm = alarms.Min();
-            //List<TimeSpan> intervals = new List<TimeSpan>();
-            //foreach (Alarm item in alarmList.ListBoxAlarms.Items)
-            //{
-            //    TimeSpan min = new TimeSpan(24, 0, 0);
-            //    if (DateTime.Now - item.Time < min)
-            //        alarm = item;
-            //}
             Console.WriteLine(alarm);
         }
 
@@ -92,7 +86,6 @@ namespace Clock
                )
             {
                 PlayAlarm();
-                //MessageBox.Show(alarm.Filename, "Alarm", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 GetNextAlarm();
             }
             if(DateTime.Now.Second == 0)
@@ -104,10 +97,14 @@ namespace Clock
         
         void PlayAlarm()
         {
-            axWindowsMediaPlayer.URL = alarm.Filename;
+            axWindowsMediaPlayer.URL =
+                File.Exists(alarm.Filename) ?
+                alarm.Filename :
+                Path.GetFullPath(DEFAULT_ALARM_SOUND);
             axWindowsMediaPlayer.settings.volume = 100;
             axWindowsMediaPlayer.Ctlcontrols.play();
             axWindowsMediaPlayer.Visible = true;
+            Console.WriteLine($"Play ALARM: {alarm}");
         }
 
         private void SetVisibility(bool visible)
