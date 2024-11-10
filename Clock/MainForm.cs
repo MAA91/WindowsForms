@@ -13,6 +13,7 @@ using System.Diagnostics;
 using Clock.Properties;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
+using AxWMPLib;
 
 namespace Clock
 {
@@ -83,6 +84,7 @@ namespace Clock
             if (showWeekdayToolStripMenuItem.Checked)
                 labelTime.Text += $"\n{DateTime.Now.DayOfWeek}";
             if (
+                 alarm != null &&
                  alarm.Weekdays[((int)DateTime.Now.DayOfWeek - 1 < 0 ? 6 : (int)DateTime.Now.DayOfWeek - 1)] == true &&                 
                  DateTime.Now.Hour == alarm.Time.Hour &&
                  DateTime.Now.Minute == alarm.Time.Minute &&
@@ -228,6 +230,7 @@ namespace Clock
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveSettings();
+            alarmList.SaveAlarmsToFile("alarms.csv");
         }
 
         private void loadOnWindowsStartupToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
@@ -240,10 +243,21 @@ namespace Clock
             rk.Dispose();
         }
 
+        private void MainForm_FormClosing(object sender, FormClosedEventArgs e)
+        {
+            SaveSettings();
+            alarmList.SaveAlarmsToFile("alarm.csv");
+        }
+
         private void alarmsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             alarmList.ShowDialog(this);
             GetNextAlarm();
+        }
+
+        void SetPlayerInvisible(object sender, _WMPOCXEvents_EndOfStreamEvent e)
+        {
+            axWindowsMediaPlayer.Visible = false;
         }
 
         [DllImport("kernel32.dll")]
