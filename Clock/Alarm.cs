@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,13 @@ namespace Clock
         public DateTime Date { get; set; }
         public DateTime Time { get; set; }
         public bool[] Weekdays { get; private set; }
-        public string Filename { get; set; } = "";
+        string filename;
+        public string Filename
+        {
+            set => filename = value; 
+            get => System.IO.File.Exists(filename) ? filename : Path.GetFullPath(DEFAULT_ALARM_SOUND);
+        }
+        static readonly string DEFAULT_ALARM_SOUND = "..Sound\\melodiya-na-budilnik-quotkurantyiquot-33073";
 
         public Alarm()
         {
@@ -81,7 +88,7 @@ namespace Clock
 
         public int CompareTo(object other)
         {
-            return this.Time.CompareTo((other as Alarm).Time);
+            return this.Time.TimeOfDay.CompareTo((other as Alarm).Time.TimeOfDay);
         }
     }
 }

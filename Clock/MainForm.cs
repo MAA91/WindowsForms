@@ -64,7 +64,7 @@ namespace Clock
             List<Alarm> alarms = new List<Alarm>();
             foreach (Alarm item in alarmList.ListBoxAlarms.Items)
             {
-                if(item.Time > DateTime.Now)alarms.Add(item); 
+                if(item.Time.TimeOfDay > DateTime.Now.TimeOfDay)alarms.Add(item); 
             }
             if(alarms.Min() != null)alarm = alarms.Min();
             Console.WriteLine(alarm);
